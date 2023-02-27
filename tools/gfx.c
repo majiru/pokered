@@ -36,7 +36,7 @@ void parse_args(int argc, char *argv[]) {
 		{"help", no_argument, 0, 'h'},
 		{0}
 	};
-	for (int opt; (opt = getopt_long(argc, argv, "d:o:p:h", long_options)) != -1;) {
+	for (int opt; (opt = getopt_long(argc, argv, "d:o:p:h", long_options, NULL, 0)) != -1;) {
 		switch (opt) {
 		case 'R':
 			options.remove_whitespace = true;
@@ -207,14 +207,17 @@ const uint8_t flipped[256] = {
 };
 
 bool flip_exists(const uint8_t *tile, const uint8_t *tiles, int tile_size, int num_tiles, bool xflip, bool yflip) {
-	uint8_t flip[tile_size]; // VLA
-	memset(flip, 0, tile_size);
+	uint8_t *flip;
+	bool ret;
+	flip = mallocz(tile_size, 1);
 	int half_size = tile_size / 2;
 	for (int i = 0; i < tile_size; i++) {
 		int j = yflip ? (options.interleave && i < half_size ? half_size : tile_size) - 1 - (i ^ 1) : i;
 		flip[j] = xflip ? flipped[tile[i]] : tile[i];
 	}
-	return tile_exists(flip, tiles, tile_size, num_tiles);
+	ret = tile_exists(flip, tiles, tile_size, num_tiles);
+	free(flip);
+	return ret;
 }
 
 void remove_flip(struct Graphic *graphic, bool xflip, bool yflip) {
