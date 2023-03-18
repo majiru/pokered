@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdnoreturn.h>
 #include <inttypes.h>
 #include <string.h>
 #include <errno.h>
@@ -22,7 +23,7 @@
 
 #define error_exit(...) exit((fprintf(stderr, PROGRAM_NAME ": " __VA_ARGS__), 1))
 
-void usage_exit(int status) {
+noreturn void usage_exit(int status) {
 	fprintf(stderr, "Usage: " PROGRAM_NAME " " USAGE_OPTS "\n");
 	exit(status);
 }
