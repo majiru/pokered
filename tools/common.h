@@ -28,9 +28,6 @@ noreturn void usage_exit(int status) {
 	exit(status);
 }
 
-int getopt_long_index;
-#define getopt_long(argc, argv, optstring, longopts) getopt_long(argc, argv, optstring, longopts, &getopt_long_index)
-
 void *xmalloc(size_t size) {
 	errno = 0;
 	void *m = malloc(size);
